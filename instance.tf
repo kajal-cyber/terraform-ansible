@@ -121,7 +121,7 @@ resource "null_resource" "remoteexec-for-inventoryfile" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("Demo_ans_key.pem")
+      private_key = "/var/tmp/Demo_ans_key.pem"
       # host        = aws_instance.terraform_instance[0].public_ip
       host = aws_instance.ansible-master.public_ip
 
@@ -144,7 +144,7 @@ resource "null_resource" "ping" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("Demo_ans_key.pem")
+      private_key = "/var/tmp/Demo_ans_key.pem"
       # host        = aws_instance.terraform_instance[0].public_ip
       host = aws_instance.ansible-master.public_ip
 
