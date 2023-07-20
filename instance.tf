@@ -24,7 +24,7 @@ resource "aws_instance" "ansible-master" { #public instances
   #-------------------------------------------------------for passwordless SSH
 
   provisioner "file" {
-    source      = "./Demo_ans_key.pem"
+    source      = "/var/tmp/Demo_ans_key.pem"
     destination = "/home/ubuntu/.ssh/Demo_ans_key.pem"
     on_failure  = fail
 
