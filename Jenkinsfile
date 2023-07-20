@@ -23,7 +23,7 @@ pipeline {
                  script{
                         dir("terraform")
                         {
-                            git branch: 'main', url: 'https://github.com/kajal-cyber/test.git'
+                            git branch: 'main', url: 'https://github.com/kajal-cyber/terraform-ansible.git'
                         }
                     }
                 }
