@@ -8,8 +8,24 @@ resource "aws_instance" "ansible-master" { #public instances
   tags = {
     Name = "Ansible-master"
   }
+}
+#--------------------------------------------------------------------passwordless ssh between jenkins master and ansible master-------
 
+resource "null_resource" "jenkins-ansible-ssh" {
+  depends_on = [aws_instance.ansible-master]
+  provisioner "local-exec" {
+    on_failure = fail
+    command = <<-EOT
+      cd ~/.ssh
+      sudo cp /var/tmp/Demo_ans_key.pem /home/ubuntu/.ssh/Demo_ans_key.pem
+      sudo chmod 600 *.pem
+      echo 'Host *\n\tStrictHostKeyChecking no\n\tUser ubuntu\n\tIdentityFile /home/ubuntu/.ssh/Demo_ans_key.pem' > config
+     EOT
+}
+}
   #--------Provisioner---------------------installing ansible on master node
+ resource "null_resource" "ansible-configuration" {
+  depends_on = [aws_instance.ansible-master, null_resource.jenkins-ansible-ssh]
   provisioner "remote-exec" {
     inline = [
       "sudo apt update -y",
@@ -36,6 +52,7 @@ resource "aws_instance" "ansible-master" { #public instances
     on_failure  = fail
 
   }
+
   #-----------------------------------part of passwordless ssh----------------------------
   provisioner "remote-exec" {
     inline = [
@@ -48,12 +65,13 @@ resource "aws_instance" "ansible-master" { #public instances
   connection {
     type        = "ssh"
     user        = "ubuntu"
-    private_key = "/var/tmp/Demo_ans_key.pem"
+    private_key =file("/var/tmp/Demo_ans_key.pem")
     # host        = aws_instance.terraform_instance[0].public_ip
     host = self.public_ip
 
   }
 }
+
 #-----------------------------------------------------------------------Ansible host nodes
 
 
@@ -121,7 +139,7 @@ resource "null_resource" "remoteexec-for-inventoryfile" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = "/var/tmp/Demo_ans_key.pem"
+      private_key = file("/var/tmp/Demo_ans_key.pem")
       # host        = aws_instance.terraform_instance[0].public_ip
       host = aws_instance.ansible-master.public_ip
 
@@ -144,7 +162,7 @@ resource "null_resource" "ping" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = "/var/tmp/Demo_ans_key.pem"
+      private_key = file("/var/tmp/Demo_ans_key.pem")
       # host        = aws_instance.terraform_instance[0].public_ip
       host = aws_instance.ansible-master.public_ip
 
