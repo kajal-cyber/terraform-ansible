@@ -16,6 +16,7 @@ pipeline {
                 sh 'cp "$SSH_KEY" /var/tmp/Demo_ans_key.pem'
             }
         }
+    }
 
     stage('checkout') {
             steps {
@@ -47,4 +48,5 @@ pipeline {
         
     }
 }
-}
+
+
