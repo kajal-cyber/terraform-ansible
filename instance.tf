@@ -67,7 +67,7 @@ resource "null_resource" "jenkins-ansible-ssh" {
     user        = "ubuntu"
     private_key =file("/var/tmp/Demo_ans_key.pem")
     # host        = aws_instance.terraform_instance[0].public_ip
-    host = self.public_ip
+    host = aws_instance.ansible-master.public_ip
 
   }
 }
