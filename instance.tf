@@ -48,7 +48,7 @@ resource "aws_instance" "ansible-master" { #public instances
   connection {
     type        = "ssh"
     user        = "ubuntu"
-    private_key = file("Demo_ans_key.pem")
+    private_key = "/var/tmp/Demo_ans_key.pem"
     # host        = aws_instance.terraform_instance[0].public_ip
     host = self.public_ip
 
