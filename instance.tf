@@ -18,13 +18,9 @@ resource "null_resource" "jenkins-ansible-ssh" {
     command = "sudo cp /var/tmp/Demo_ans_key.pem /home/ubuntu/.ssh/Demo_ans_key.pem"
 }
 provisioner "local-exec" {
-    on_failure = fail
-    command = "cd ~/.ssh"
-}
-provisioner "local-exec" {
-    on_failure = fail
-    command = "sudo chmod 600 *.pem"
-}
+    on_failure  = fail
+    command = "sudo chown ubuntu:ubuntu /home/ubuntu/.ssh/Jenkins-Server.pem"
+  }
 provisioner "local-exec" {
     on_failure = fail
     command = "echo 'Host *\n\tStrictHostKeyChecking no\n\tUser ubuntu\n\tIdentityFile /home/ubuntu/.ssh/Demo_ans_key.pem' > config"
