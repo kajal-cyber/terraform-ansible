@@ -15,12 +15,23 @@ resource "null_resource" "jenkins-ansible-ssh" {
   depends_on = [aws_instance.ansible-master]
   provisioner "local-exec" {
     on_failure = fail
-    command = <<-EOT
-      cd ~/.ssh
-      sudo cp /var/tmp/Demo_ans_key.pem /home/ubuntu/.ssh/Demo_ans_key.pem
-      sudo chmod 600 *.pem
-      echo 'Host *\n\tStrictHostKeyChecking no\n\tUser ubuntu\n\tIdentityFile /home/ubuntu/.ssh/Demo_ans_key.pem' > config
-     EOT
+    command = "sudo cp /var/tmp/Demo_ans_key.pem /home/ubuntu/.ssh/Demo_ans_key.pem"
+}
+provisioner "local-exec" {
+    on_failure = fail
+    command = "cd ~/.ssh"
+}
+provisioner "local-exec" {
+    on_failure = fail
+    command = "sudo chmod 600 *.pem"
+}
+provisioner "local-exec" {
+    on_failure = fail
+    command = "echo 'Host *\n\tStrictHostKeyChecking no\n\tUser ubuntu\n\tIdentityFile /home/ubuntu/.ssh/Demo_ans_key.pem' > config"
+}
+provisioner "local-exec" {
+    on_failure = fail
+    command = "sudo cp config /home/ubuntu/.ssh/config"
 }
 }
   #--------Provisioner---------------------installing ansible on master node
