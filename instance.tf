@@ -1,18 +1,13 @@
-resource "aws_instance" "ansible-master" { #public instances
-  ami                    = "ami-08e5424edfe926b43"
-  subnet_id              = aws_subnet.Terraform_public_subnet.id
-  key_name               = "Demo_ans_key"
-  vpc_security_group_ids = [aws_security_group.Terraform_public_SG.id]
-  iam_instance_profile   = aws_iam_instance_profile.SSMRoleforEC2_profile.id
-  instance_type          = "t2.micro"
-  tags = {
-    Name = "Ansible-master"
-  }
-}
+
 #--------------------------------------------------------------------passwordless ssh between jenkins master and ansible master-------
 
 resource "null_resource" "jenkins-ansible-ssh" {
   #depends_on = [aws_instance.ansible-master]
+
+ provisioner "local-exec" {
+    on_failure = fail
+    command = "sudo su - ubuntu"
+}
   provisioner "local-exec" {
     on_failure = fail
     command = "sudo cp /var/tmp/Demo_ans_key.pem /home/ubuntu/.ssh/Demo_ans_key.pem"
@@ -30,6 +25,23 @@ provisioner "local-exec" {
     command = "sudo cp config /home/ubuntu/.ssh/config"
 }
 }
+
+#-----------------------------------launch ansible-master----------------------------
+
+resource "aws_instance" "ansible-master" { #public instances
+  ami                    = "ami-08e5424edfe926b43"
+  subnet_id              = aws_subnet.Terraform_public_subnet.id
+  key_name               = "Demo_ans_key"
+  vpc_security_group_ids = [aws_security_group.Terraform_public_SG.id]
+  iam_instance_profile   = aws_iam_instance_profile.SSMRoleforEC2_profile.id
+  instance_type          = "t2.micro"
+  tags = {
+    Name = "Ansible-master"
+  }
+depends_on = [null_resource.jenkins-ansible-ssh]
+}
+
+
   #--------Provisioner---------------------installing ansible on master node
  resource "null_resource" "ansible-configuration" {
   depends_on = [aws_instance.ansible-master, null_resource.jenkins-ansible-ssh]
