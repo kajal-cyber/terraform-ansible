@@ -33,6 +33,6 @@ resource "aws_iam_role_policy_attachment" "AmazonSSMAutomationRole" {
 }
 
 resource "aws_iam_instance_profile" "SSMRoleforEC2_profile" {
-  name = "SSMRoleforEC2_profile"
+  name = "SSMRoleforEC2_profile_1"
   role = aws_iam_role.SSMRoleforEC2.name
 }
