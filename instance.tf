@@ -106,7 +106,7 @@ resource "aws_instance" "ansible-hosts" { #public instances
   tags = {
     Name = "Ansible-host-${count.index}"
   }
-
+depends_on = [aws_instance.ansible-master]
 }
 
 #-------------------------------------------------inventory file
