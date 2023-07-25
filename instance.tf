@@ -12,7 +12,7 @@ resource "aws_instance" "ansible-master" { #public instances
 #--------------------------------------------------------------------passwordless ssh between jenkins master and ansible master-------
 
 resource "null_resource" "jenkins-ansible-ssh" {
-  depends_on = [aws_instance.ansible-master]
+  #depends_on = [aws_instance.ansible-master]
   provisioner "local-exec" {
     on_failure = fail
     command = "sudo cp /var/tmp/Demo_ans_key.pem /home/ubuntu/.ssh/Demo_ans_key.pem"
