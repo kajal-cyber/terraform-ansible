@@ -14,7 +14,7 @@ resource "null_resource" "jenkins-ansible-ssh" {
 }
 provisioner "local-exec" {
     on_failure  = fail
-    command = "sudo chown ubuntu:ubuntu /home/ubuntu/.ssh/Jenkins-Server.pem"
+    command = "sudo chown ubuntu:ubuntu /home/ubuntu/.ssh/Demo_ans_key.pem"
   }
 provisioner "local-exec" {
     on_failure = fail
